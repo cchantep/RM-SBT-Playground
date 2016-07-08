@@ -6,6 +6,9 @@ version := "0.1-SNAPSHOT"
 
 scalaVersion := "2.11.8"
 
+scalacOptions := Seq("-feature", "-language:postfixOps")
+
+// Dependencies
 val rmVer = "0.11.14"
 val slf4jVer = "1.7.12"
 val log4jVer = "2.5"
