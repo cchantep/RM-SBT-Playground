@@ -2,6 +2,8 @@
 
 Can work with any database, even if not initialized/empty.
 
+## Usage
+
 ```scala
 sbt console
 scala> import Playground._
@@ -52,3 +54,7 @@ res1: scala.util.Try[Unit] = Success(())
 ```scala
 scala> rm exit
 ```
+
+## Select version of ReactiveMongo
+
+    RM_VERSION="..." sbt console
