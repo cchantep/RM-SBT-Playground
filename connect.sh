@@ -1,5 +1,10 @@
 #! /bin/bash
 
+if [ $# -lt 1 ]; then
+  echo "Usage: ./connect.sh [mongo-uri]"
+  exit 1
+fi
+
 SBT_VER="0.13.11"
 SBT_LAUNCHER_HOME="$HOME/.sbt/launchers/$SBT_VER"
 SBT_LAUNCHER_JAR="$SBT_LAUNCHER_HOME/sbt-launch.jar"
@@ -19,5 +24,8 @@ else
 fi
     
 echo "SBT command: $SBT_CMD"
-
-$SBT_CMD console
+$SBT_CMD console << EOF
+import Playground._
+rm connect "$1"
+while (true) { rm.database.get; Thread.sleep(500) }
+EOF

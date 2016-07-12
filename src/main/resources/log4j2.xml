@@ -4,15 +4,22 @@
     <Console name="Console" target="SYSTEM_OUT">
       <PatternLayout pattern="%d{HH:mm:ss.SSS} ReactiveMongo %-5level [%logger{1.}] :: %msg%n" />
     </Console>
+
+    <File name="LogFile" fileName="logs/reactivemongo.log">
+      <PatternLayout>
+        <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+      </PatternLayout>
+    </File>
   </appenders>
   <loggers>
-    <logger name="reactivemongo" level="WARN" />
+    <logger name="reactivemongo" additivity="false">
+      <appender-ref ref="LogFile" level="TRACE" />
+    </logger>
+
     <logger name="akka://reactivemongo" level="OFF" />
 
-    <!-- logger name="reactivemongo.core" level="ERROR" / -->
-
     <root level="TRACE">
-      <appender-ref ref="Console"/>
+      <appender-ref ref="Console" level="WARN" />
     </root>
   </loggers>
 </configuration>

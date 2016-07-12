@@ -1,4 +1,4 @@
-import scala.util.{ Failure, Try }
+import scala.util.{ Failure, Success, Try }
 
 import scala.concurrent.{ Await, Future }
 import scala.concurrent.duration._
@@ -36,6 +36,34 @@ class Playground {
       "Connection is not available; First call `connect`."))
   }
 
+  def databaseLoop(): Try[Unit] =
+    databaseLoop(Long.MaxValue, 1000L/* 1s */, 5.seconds)
+
+  def databaseLoop(count: Long): Try[Unit] =
+    databaseLoop(count, 1000L/* 1s */, 5.seconds)
+
+  def databaseLoop(count: Long, pause: Long): Try[Unit] =
+    databaseLoop(count, pause, 5.seconds)
+
+  def databaseLoop(count: Long, pause: Long, timeout: Duration): Try[Unit] =
+    databaseLoop(count, pause, timeout, () => Success({}))
+
+  @annotation.tailrec
+  final def databaseLoop(count: Long, pause: Long, timeout: Duration, f: () => Try[Unit]): Try[Unit] = if (count == 0) Success({}) else {
+    database(timeout) match {
+      case e @ Failure(_) => e
+
+      case Success(_) => f() match {
+        case e @ Failure(_) => e
+        case _ => {
+          Thread.sleep(pause)
+
+          databaseLoop(count - 1, pause, timeout, f)
+        }
+      }
+    }
+  }
+
   def dummyFind(): Try[Unit] = dummyFind(5.seconds)
 
   def dummyFind(timeout: Duration): Try[Unit] = lastDb match {
@@ -45,6 +73,22 @@ class Playground {
     case _ => Failure(new RuntimeException(
       "Database is not available; First call `database`."))
   }
+
+  def dummyFindLoop(): Try[Unit] =
+    dummyFindLoop(Long.MaxValue, 1000L /* 1s */, 5.seconds)
+
+  def dummyFindLoop(count: Long): Try[Unit] =
+    dummyFindLoop(count, 1000L /* 1s */, 5.seconds)
+
+  def dummyFindLoop(count: Long, pause: Long): Try[Unit] =
+    dummyFindLoop(count, pause, 5.seconds)
+
+  def dummyFindLoop(count: Long, pause: Long, timeout: Duration): Try[Unit] =
+    if (count == 0) Success({}) else dummyFind(timeout) match {
+      case e @ Failure(_) => e
+
+      case Success(_) => dummyFindLoop(count - 1, pause, timeout)
+    }
 
   def close(): Unit = driver.close()
 }
