@@ -6,6 +6,7 @@ Can work with any database, even if not initialized/empty.
 
 ```scala
 ./run.sh
+scala> import Playground._
 scala> rm connect "mongodb://host:27017,host:27018,host:27019/foo"
 scala> rm exit
 ```

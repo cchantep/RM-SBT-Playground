@@ -12,7 +12,7 @@ resolvers ++= Seq(
   "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/")
 
 // Dependencies
-val rmVer = sys.env.get("RM_VERSION").getOrElse("0.12-RC0")
+val rmVer = sys.env.get("RM_VERSION").getOrElse("0.12-RC3")
 val slf4jVer = "1.7.12"
 val log4jVer = "2.5"
 
