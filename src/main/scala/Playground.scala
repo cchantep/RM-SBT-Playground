@@ -15,6 +15,8 @@ class Playground {
   private var con = Option.empty[(MongoConnection, String)]
   private var lastDb = Option.empty[DefaultDB]
 
+  def lastDatabase: DefaultDB = lastDb.get
+
   def connect(uri: String): Unit = driver.synchronized {
     con.foreach(_._1.close())
 
