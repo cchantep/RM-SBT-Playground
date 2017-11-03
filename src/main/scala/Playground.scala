@@ -8,7 +8,7 @@ import reactivemongo.api.DefaultDB
 
 class Playground {
   import reactivemongo.bson.BSONDocument
-  import reactivemongo.api.{ MongoDriver, MongoConnection }
+  import reactivemongo.api.{ QueryOpts, MongoDriver, MongoConnection }
 
   private lazy val driver = new MongoDriver
 
@@ -91,6 +91,17 @@ class Playground {
 
       case Success(_) => dummyFindLoop(count - 1, pause, timeout)
     }
+
+  def tailableFind(): Unit = lastDb match {
+    case Some(db) => db.collection("bar").find(BSONDocument.empty).
+        options(QueryOpts().tailable.awaitData).
+        cursor[BSONDocument]().fold({}) { (_, doc) =>
+          println(s"doc = ${BSONDocument pretty doc}")
+        }
+
+    case _ => Failure(new RuntimeException(
+      "Database is not available; First call `database`."))
+  }
 
   def close(): Unit = driver.close()
 }
