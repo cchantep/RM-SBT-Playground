@@ -11,8 +11,10 @@
       </PatternLayout>
     </File>
   </appenders>
+
   <loggers>
     <logger name="reactivemongo" additivity="false">
+      <appender-ref ref="Console" level="INFO" />
       <appender-ref ref="LogFile" level="TRACE" />
     </logger>
 

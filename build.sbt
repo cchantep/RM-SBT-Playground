@@ -4,7 +4,7 @@ name := "RM-SBT-Playground"
 
 version := "0.1-SNAPSHOT"
 
-scalaVersion := "2.12.4"
+scalaVersion := "2.12.6"
 
 scalacOptions := Seq("-feature", "-language:postfixOps", "-language:reflectiveCalls")
 
@@ -12,12 +12,13 @@ resolvers ++= Seq(
   "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/")
 
 // Dependencies
-val rmVer = sys.env.get("RM_VERSION").getOrElse("0.12.7")
+val rmVer = sys.env.get("RM_VERSION").getOrElse("0.15.0")
 val slf4jVer = "1.7.12"
 val log4jVer = "2.5"
 
 libraryDependencies ++= Seq(
   "org.reactivemongo" %% "reactivemongo" % rmVer changing(),
+  //"org.reactivemongo" % "reactivemongo-shaded-native" % s"${rmVer}-{linux|osx}-x86-64" % "runtime" changing(),
   "org.slf4j" % "slf4j-api" % slf4jVer % "provided"
 )
 
