@@ -4,7 +4,7 @@ name := "RM-SBT-Playground"
 
 version := "0.1-SNAPSHOT"
 
-scalaVersion := "2.12.6"
+scalaVersion := "2.12.8"
 
 scalacOptions := Seq("-feature", "-language:postfixOps", "-language:reflectiveCalls")
 
@@ -12,7 +12,7 @@ resolvers ++= Seq(
   "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/")
 
 // Dependencies
-val rmVer = sys.env.get("RM_VERSION").getOrElse("0.15.0")
+val rmVer = sys.env.get("RM_VERSION").getOrElse("0.17.1")
 val slf4jVer = "1.7.12"
 val log4jVer = "2.5"
 
