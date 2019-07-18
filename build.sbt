@@ -14,12 +14,12 @@ resolvers ++= Seq(
 // Dependencies
 val rmVer = sys.env.get("RM_VERSION").getOrElse("0.17.1")
 val slf4jVer = "1.7.12"
-val log4jVer = "2.5"
+val log4jVer = "2.12.0"
 
 libraryDependencies ++= Seq(
   "org.reactivemongo" %% "reactivemongo" % rmVer changing(),
   //"org.reactivemongo" % "reactivemongo-shaded-native" % s"${rmVer}-{linux|osx}-x86-64" % "runtime" changing(),
-  "org.slf4j" % "slf4j-api" % slf4jVer % "provided"
+  "org.slf4j" % "slf4j-api" % slf4jVer % Provided
 )
 
 libraryDependencies ++= {

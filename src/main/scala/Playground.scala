@@ -18,7 +18,7 @@ class Playground {
   def lastDatabase: DefaultDB = lastDb.get
 
   def connect(uri: String): Unit = driver.synchronized {
-    con.foreach(_._1.close())
+    con.foreach(_._1.askClose()(5.seconds))
 
     con = Some(
       MongoConnection.parseURI(uri).filter(_.db.isDefined).map { dbUri =>
