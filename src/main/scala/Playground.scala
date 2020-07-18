@@ -4,26 +4,26 @@ import scala.concurrent.{ Await, Future }
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 
-import reactivemongo.api.DefaultDB
+import reactivemongo.api.DB
 
 class Playground {
-  import reactivemongo.bson.BSONDocument
-  import reactivemongo.api.{ QueryOpts, MongoDriver, MongoConnection }
+  import reactivemongo.api.bson.BSONDocument
+  import reactivemongo.api.{ AsyncDriver, MongoConnection }
 
-  private lazy val driver = new MongoDriver
+  private lazy val driver = new AsyncDriver
 
   private var con = Option.empty[(MongoConnection, String)]
-  private var lastDb = Option.empty[DefaultDB]
+  private var lastDb = Option.empty[DB]
 
-  def lastDatabase: DefaultDB = lastDb.get
+  def lastDatabase: DB = lastDb.get
 
   def connect(uri: String): Unit = driver.synchronized {
-    con.foreach(_._1.askClose()(5.seconds))
+    con.foreach(_._1.close()(5.seconds))
 
-    con = Some(
-      MongoConnection.parseURI(uri).filter(_.db.isDefined).map { dbUri =>
-        driver.connection(dbUri) -> dbUri.db.get
-      }.get)
+    con = Some(Await.result(
+      (MongoConnection.fromStringWithDB(uri).flatMap { dbUri =>
+        driver.connect(dbUri).map { _ -> dbUri.db }
+      }), 5.seconds))
   }
 
   def database(): Try[Unit] = database(5.seconds)
@@ -94,8 +94,7 @@ class Playground {
 
   def tailableFind(): Unit = lastDb match {
     case Some(db) => db.collection("bar").find(BSONDocument.empty).
-        options(QueryOpts().tailable.awaitData).
-        cursor[BSONDocument]().fold({}) { (_, doc) =>
+        tailable.awaitData.cursor[BSONDocument]().fold({}) { (_, doc) =>
           println(s"doc = ${BSONDocument pretty doc}")
         }
 
