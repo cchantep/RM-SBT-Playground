@@ -76,6 +76,17 @@ class Playground {
       "Database is not available; First call `database`."))
   }
 
+  def dummyInsert(): Try[Unit] = dummyInsert(5.seconds)
+
+  def dummyInsert(timeout: Duration): Try[Unit] = lastDb match {
+    case Some(db) => Try(Await.result(
+      db.collection("db").insert.one(
+        BSONDocument("_id" -> System.currentTimeMillis())), timeout))
+
+    case _ => Failure(new RuntimeException(
+      "Database is not available; First call `database`."))
+  }
+
   def dummyFindLoop(): Try[Unit] =
     dummyFindLoop(Long.MaxValue, 1000L /* 1s */, 5.seconds)
 
