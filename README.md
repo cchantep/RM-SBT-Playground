@@ -64,3 +64,15 @@ scala> rm exit
 ## Select version of ReactiveMongo
 
     RM_VERSION="..." sbt console
+
+## Docker
+
+A [Docker image](https://hub.docker.com/r/cchantep/rm-sbt-playground) is also provided:
+
+```
+# With default ReactiveMongo version
+docker run --rm -it cchantep/rm-sbt-playground:0.1.1
+
+# With specific ReactiveMongo version
+docker run -e RM_VERSION=... --rm -it cchantep/rm-sbt-playground:0.1.1
+```
